@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Structure &amp; Projects - 3D Light</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+        body {
+            color: #1e293b;
+            padding: 48px 20px 80px;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh;
+            background:
+                radial-gradient(900px 500px at 12% -5%, rgba(56, 189, 248, .30), transparent 60%),
+                radial-gradient(800px 500px at 92% 8%, rgba(192, 132, 252, .26), transparent 60%),
+                radial-gradient(900px 600px at 50% 105%, rgba(74, 222, 128, .20), transparent 60%),
+                linear-gradient(180deg, #f6f9ff 0%, #eef3fb 100%);
+            overflow-x: hidden;
+        }
+        body::before {
+            content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+            background-image: radial-gradient(rgba(100, 116, 139, .20) 1px, transparent 1px);
+            background-size: 26px 26px;
+            mask-image: radial-gradient(ellipse at 50% 30%, #000 15%, transparent 75%);
+            -webkit-mask-image: radial-gradient(ellipse at 50% 30%, #000 15%, transparent 75%);
+        }
+        body > * { position: relative; z-index: 1; }
+
+        /* Team colour themes: c = main, hi = highlight, lo = shadow */
+        .enfin      { --c: #0ea5e9; --hi: #7dd3fc; --lo: #0369a1; }
+        .automation { --c: #f97316; --hi: #fdba74; --lo: #c2410c; }
+        .newhomes   { --c: #22c55e; --hi: #86efac; --lo: #15803d; }
+        .axia       { --c: #a855f7; --hi: #d8b4fe; --lo: #7e22ce; }
+
+        /* 3D tilt (mouse-driven, see script at the bottom) */
+        .tilt { transform-style: preserve-3d; transition: transform .25s ease-out, box-shadow .25s ease-out; will-change: transform; }
+
+        /* Header */
+        .header-section { text-align: center; margin-bottom: 34px; }
+        .page-title {
+            font-size: 32px; font-weight: 800; letter-spacing: -.5px; margin-bottom: 8px;
+            background: linear-gradient(90deg, #0284c7, #7c3aed 50%, #16a34a);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            filter: drop-shadow(0 6px 10px rgba(79, 70, 229, .18));
+        }
+        .page-subtitle { font-size: 14px; color: #64748b; }
+
+        /* Project lead */
+        .director-section { margin-bottom: 60px; display: flex; flex-direction: column; align-items: center; position: relative; }
+        .director-float { animation: float 6s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+        .director-card {
+            display: flex; align-items: center; gap: 16px;
+            padding: 10px 34px 10px 10px; border-radius: 50px;
+            background: linear-gradient(160deg, #ffffff, #eaf6ff 85%);
+            border: 1px solid #7dd3fc;
+            box-shadow: 0 8px 0 -1px #a5dcf8, 0 26px 36px -14px rgba(3, 105, 161, .38), 0 0 40px -10px rgba(14, 165, 233, .45), inset 0 1px 0 #fff;
+        }
+        .director-avatar {
+            position: relative; width: 64px; height: 64px; border-radius: 50%; flex: none;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 18px; color: #fff;
+            background: radial-gradient(circle at 30% 25%, #7dd3fc, #0369a1 75%);
+            border: 3px solid #fff; overflow: hidden;
+            box-shadow: 0 0 0 2px #38bdf8, 0 10px 18px -4px rgba(3, 105, 161, .5);
+            transform: translateZ(40px);
+        }
+        .director-avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+        .director-info { transform: translateZ(25px); }
+        .director-name { font-size: 18px; font-weight: 800; color: #0f172a; line-height: 1.2; }
+        .director-title { font-size: 12px; font-weight: 700; color: #0284c7; letter-spacing: .6px; text-transform: uppercase; margin-top: 2px; }
+
+        /* Connectors with arrows pointing up to Kiran */
+        .director-section::after, .branch::after {
+            content: ''; position: absolute; left: 50%; transform: translateX(-50%);
+            width: 14px; height: 28px; background: linear-gradient(#38bdf8, #0284c7);
+            clip-path: polygon(50% 0, 100% 38%, 57% 38%, 57% 100%, 43% 100%, 43% 38%, 0 38%);
+        }
+        .director-section::after { bottom: -28px; }
+        .branch::after { top: -32px; }
+        .branch::before {
+            content: ''; position: absolute; top: -32px; left: -10px; right: -10px; height: 3px; border-radius: 2px;
+            background: linear-gradient(90deg, #38bdf8, #0284c7); box-shadow: 0 3px 8px rgba(14, 165, 233, .35);
+        }
+        .branch:first-child::before { left: 50%; }
+        .branch:last-child::before { right: 50%; }
+
+        /* Team cards */
+        .board-container { display: grid; grid-template-columns: repeat(4, 1fr); width: 100%; max-width: 1300px; }
+        .branch { position: relative; margin: 0 10px; }
+        .stream-card {
+            height: 100%; padding: 22px 16px 26px; border-radius: 20px;
+            display: flex; flex-direction: column; align-items: center;
+            background:
+                radial-gradient(240px 150px at 50% 0%, color-mix(in srgb, var(--c) 20%, transparent), transparent 72%),
+                linear-gradient(170deg, #ffffff 0%, #fbfcff 60%, #f3f6fc 100%);
+            border: 1px solid #e2e8f0;
+            border-top: 4px solid var(--c);
+            box-shadow: 0 9px 0 -1px color-mix(in srgb, var(--c) 45%, #fff), 0 30px 38px -22px rgba(30, 41, 59, .35), 0 0 44px -22px var(--c), inset 0 1px 0 #fff;
+        }
+        .stream-card:hover { box-shadow: 0 9px 0 -1px color-mix(in srgb, var(--c) 55%, #fff), 0 38px 46px -22px rgba(30, 41, 59, .42), 0 0 56px -14px var(--c), inset 0 1px 0 #fff; }
+
+        .stream-pill {
+            width: 100%; padding: 11px 14px; border-radius: 30px; text-align: center;
+            font-size: 14px; font-weight: 700; color: #fff; letter-spacing: .2px; margin-bottom: 28px;
+            background: linear-gradient(180deg, var(--hi) -60%, var(--c) 50%, var(--lo) 190%);
+            box-shadow: 0 5px 0 var(--lo), 0 14px 18px -6px rgba(15, 23, 42, .35), inset 0 1px 0 rgba(255, 255, 255, .5);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, .35);
+            transform: translateZ(30px);
+        }
+        .members-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px 12px; width: 100%; }
+        .member-node { display: flex; flex-direction: column; align-items: center; text-align: center; transform: translateZ(22px); }
+
+        /* Sphere avatars */
+        .avatar {
+            position: relative; width: 50px; height: 50px; border-radius: 50%; margin-bottom: 11px;
+            display: flex; align-items: center; justify-content: center; color: #fff;
+            background: radial-gradient(circle at 30% 24%, #fff 0, var(--hi) 12%, var(--c) 55%, var(--lo) 110%);
+            box-shadow: inset -5px -7px 11px rgba(0, 0, 0, .25), 0 10px 14px -5px rgba(15, 23, 42, .4), 0 0 18px -6px var(--c);
+            transition: transform .25s ease;
+        }
+        .avatar::after {
+            content: ''; position: absolute; left: 12%; right: 12%; bottom: -13px; height: 8px; border-radius: 50%;
+            background: radial-gradient(ellipse, rgba(15, 23, 42, .28), transparent 70%);
+        }
+        .member-node:hover .avatar { transform: translateY(-5px) scale(1.06); }
+        .avatar svg { width: 25px; height: 25px; fill: currentColor; filter: drop-shadow(0 2px 2px rgba(0, 0, 0, .3)); }
+        .member-name { font-size: 12px; font-weight: 700; color: #1e293b; line-height: 1.3; margin-bottom: 7px; }
+        .project-tag {
+            font-size: 10px; font-weight: 700; letter-spacing: .2px; color: var(--lo);
+            background: color-mix(in srgb, var(--c) 12%, #fff);
+            border: 1px solid color-mix(in srgb, var(--c) 40%, #fff);
+            padding: 3px 10px; border-radius: 20px; max-width: 118px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            box-shadow: 0 3px 0 color-mix(in srgb, var(--c) 30%, #fff);
+        }
+        .project-tag.tbd { color: #64748b; background: #f1f5f9; border: 1px dashed #cbd5e1; box-shadow: none; font-weight: 600; }
+
+        /* Projects section */
+        .projects { width: 100%; max-width: 1300px; margin-top: 76px; }
+        .projects-head { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 14px; margin-bottom: 22px; padding: 0 10px; }
+        .projects-title { font-size: 24px; font-weight: 800; color: #0f172a; }
+        .projects-sub { font-size: 13px; color: #64748b; margin-top: 4px; }
+        .legend { display: flex; flex-wrap: wrap; gap: 8px 10px; }
+        .legend span {
+            display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 20px;
+            font-size: 12px; font-weight: 700; color: var(--lo);
+            background: color-mix(in srgb, var(--c) 12%, #fff);
+            border: 1px solid color-mix(in srgb, var(--c) 40%, #fff);
+            box-shadow: 0 3px 0 color-mix(in srgb, var(--c) 28%, #fff);
+        }
+        .legend i { width: 10px; height: 10px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #fff, var(--c) 60%); box-shadow: 0 2px 5px color-mix(in srgb, var(--c) 60%, transparent); }
+
+        .project-list { display: grid; gap: 18px; padding: 0 10px 10px; }
+        .project-row {
+            display: grid; grid-template-columns: 250px 1fr; border-radius: 16px;
+            background: linear-gradient(90deg, color-mix(in srgb, var(--c) 9%, #fff), #fff 45%);
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 8px 0 -1px color-mix(in srgb, var(--c) 40%, #fff), 0 22px 30px -16px rgba(30, 41, 59, .3), inset 0 1px 0 #fff;
+        }
+        .project-row:hover { box-shadow: 0 8px 0 -1px color-mix(in srgb, var(--c) 50%, #fff), 0 30px 38px -16px rgba(30, 41, 59, .38), 0 0 36px -16px var(--c), inset 0 1px 0 #fff; }
+        .project-name {
+            display: flex; align-items: center; justify-content: space-between; gap: 10px;
+            padding: 18px 20px; border-radius: 15px 0 0 15px;
+            font-size: 16px; font-weight: 800; color: #fff; text-shadow: 0 1px 3px rgba(0, 0, 0, .35);
+            background: linear-gradient(180deg, var(--hi) -80%, var(--c) 50%, var(--lo) 220%);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), inset -6px 0 12px -6px rgba(0, 0, 0, .3);
+            transform: translateZ(14px);
+        }
+        .count {
+            flex: none; min-width: 28px; height: 28px; padding: 0 9px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 800; color: #fff; text-shadow: none;
+            background: rgba(0, 0, 0, .18); border: 1px solid rgba(255, 255, 255, .5);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, .25);
+        }
+        .project-members { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 16px 20px; transform: translateZ(10px); }
+        .chip {
+            display: inline-flex; align-items: center; gap: 9px; padding: 5px 15px 5px 5px; border-radius: 30px;
+            font-size: 12.5px; font-weight: 700; color: #1e293b;
+            background: linear-gradient(180deg, #ffffff, #f1f5f9);
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 0 #d9e1ec, 0 10px 14px -6px rgba(15, 23, 42, .22), inset 0 1px 0 #fff;
+            transition: transform .2s ease;
+        }
+        .chip:hover { transform: translateY(-3px); }
+        .chip i {
+            width: 28px; height: 28px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-style: normal; font-size: 10px; font-weight: 800; color: #fff;
+            background: radial-gradient(circle at 30% 24%, #fff 0, var(--hi) 10%, var(--c) 55%, var(--lo) 120%);
+            box-shadow: inset -2px -3px 5px rgba(0, 0, 0, .25), 0 3px 6px rgba(15, 23, 42, .3);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, .4);
+        }
+
+        /* Smaller screens */
+        @media (max-width: 1000px) {
+            .board-container { grid-template-columns: repeat(2, 1fr); row-gap: 28px; }
+            .branch::before, .branch::after, .director-section::after { display: none; }
+            .director-section { margin-bottom: 36px; }
+        }
+        @media (max-width: 700px) {
+            .board-container { grid-template-columns: 1fr; }
+            .project-row { grid-template-columns: 1fr; }
+            .project-name { border-radius: 15px 15px 0 0; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .director-float { animation: none; }
+            .tilt { transition: none; }
+        }
+    </style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="user" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></symbol>
+</svg>
+
+<div class="header-section">
+    <h1 class="page-title">Team Structure &amp; Direct Reporting Lines</h1>
+    <p class="page-subtitle">All 18 resources report directly to Kiran Marri, Project Lead.</p>
+</div>
+
+<!-- Project Lead -->
+<div class="director-section">
+    <div class="director-float">
+        <div class="director-card tilt" data-tilt="10">
+            <div class="director-avatar">
+                KM
+                <img src="kiran.jpg" alt="Kiran Marri" onerror="this.remove()">
+            </div>
+            <div class="director-info">
+                <div class="director-name">Kiran Marri</div>
+                <div class="director-title">Project Lead</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Teams -->
+<div class="board-container">
+
+    <div class="branch">
+        <div class="stream-card enfin tilt" data-tilt="4">
+            <div class="stream-pill">Enfin Core Stream (11)</div>
+            <div class="members-grid">
+                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Chandra Bussa</span><div class="project-tag">Blue</div></div>
+                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Yaseen Khaderbad</span><div class="project-tag">ACH Auto Pay</div></div>
+                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Ramya Kolli</span><div class="project-tag">Trinity</div></div>
+                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Madhava Galinki</span><div class="project-tag">Ledger Report</div></div>
+                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Pratap Thara</span><div class="project-tag">Backlog</div></div>
+                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Nilay Jape</span><div class="project-tag">QSS</div></div>
+                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Pranathi Chodagam</span><div class="project-tag">Blue</div></div>
+                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Kanchana Vantakula</span><div class="project-tag">Ledger Report</div></div>
+                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Aparna Banka</span><div class="project-tag">Blue</div></div>
+                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Guljar</span><div class="project-tag tbd">TBD</div></div>
+                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Priya Korada</span><div class="project-tag tbd">TBD</div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="branch">
+        <div class="stream-card automation tilt" data-tilt="6">
+            <div class="stream-pill">Automation Stream (2)</div>
+            <div class="members-grid">
+                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Abdul Shaik</span><div class="project-tag">Core Automation</div></div>
+                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Sukanya Annam</span><div class="project-tag">Core Automation</div></div>
+                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Aditya</span><div class="project-tag">Core Automation</div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="branch">
+        <div class="stream-card newhomes tilt" data-tilt="6">
+            <div class="stream-pill">NewHomes Stream (4)</div>
+            <div class="members-grid">
+                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Adithya Varanasi</span><div class="project-tag">NewHomes</div></div>
+                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Yogitha Dasari</span><div class="project-tag">NewHomes</div></div>
+                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Nagaveni Sagili</span><div class="project-tag">NewHomes</div></div>
+                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Sudharani Isnaka</span><div class="project-tag">NewHomes</div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="branch">
+        <div class="stream-card axia tilt" data-tilt="6">
+            <div class="stream-pill">Axia Stream (1)</div>
+            <div class="members-grid">
+                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Hitesh Elugoti</span><div class="project-tag">Axia</div></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Projects and who works on them -->
+<section class="projects">
+    <div class="projects-head">
+        <div>
+            <h2 class="projects-title">Projects &amp; Resources</h2>
+            <p class="projects-sub">10 projects &middot; 18 resources &middot; colour shows the team each project belongs to</p>
+        </div>
+        <div class="legend">
+            <span class="enfin"><i></i>Enfin Core</span>
+            <span class="automation"><i></i>Automation</span>
+            <span class="newhomes"><i></i>NewHomes</span>
+            <span class="axia"><i></i>Axia</span>
+        </div>
+    </div>
+
+    <div class="project-list">
+
+        <div class="project-row enfin tilt" data-tilt="1.6">
+            <div class="project-name">Blue <span class="count">3</span></div>
+            <div class="project-members">
+                <span class="chip"><i>CB</i>Chandra Bussa</span>
+                <span class="chip"><i>PC</i>Pranathi Chodagam</span>
+                <span class="chip"><i>AB</i>Aparna Banka</span>
+            </div>
+        </div>
+
+        <div class="project-row enfin tilt" data-tilt="1.6">
+            <div class="project-name">ACH Auto Pay <span class="count">1</span></div>
+            <div class="project-members">
+                <span class="chip"><i>YK</i>Yaseen Khaderbad</span>
+            </div>
+        </div>
+
+        <div class="project-row enfin tilt" data-tilt="1.6">
+            <div class="project-name">Trinity <span class="count">1</span></div>
+            <div class="project-members">
+                <span class="chip"><i>RK</i>Ramya Kolli</span>
+            </div>
+        </div>
+
+        <div class="project-row enfin tilt" data-tilt="1.6">
+            <div class="project-name">Ledger Report <span class="count">2</span></div>
+            <div class="project-members">
+                <span class="chip"><i>MG</i>Madhava Galinki</span>
+                <span class="chip"><i>KV</i>Kanchana Vantakula</span>
+            </div>
+        </div>
+
+        <div class="project-row enfin tilt" data-tilt="1.6">
+            <div class="project-name">Backlog <span class="count">1</span></div>
+            <div class="project-members">
+                <span class="chip"><i>PT</i>Pratap Thara</span>
+            </div>
+        </div>
+
+        <div class="project-row enfin tilt" data-tilt="1.6">
+            <div class="project-name">QSS <span class="count">1</span></div>
+            <div class="project-members">
+                <span class="chip"><i>NJ</i>Nilay Jape</span>
+            </div>
+        </div>
+
+        <div class="project-row enfin tilt" data-tilt="1.6">
+            <div class="project-name">TBD <span class="count">2</span></div>
+            <div class="project-members">
+                <span class="chip"><i>G</i>Guljar</span>
+                <span class="chip"><i>PK</i>Priya Korada</span>
+            </div>
+        </div>
+
+        <div class="project-row automation tilt" data-tilt="1.6">
+            <div class="project-name">Core Automation <span class="count">2</span></div>
+            <div class="project-members">
+                <span class="chip"><i>AS</i>Abdul Shaik</span>
+                <span class="chip"><i>SA</i>Sukanya Annam</span>
+            </div>
+        </div>
+
+        <div class="project-row newhomes tilt" data-tilt="1.6">
+            <div class="project-name">NewHomes <span class="count">4</span></div>
+            <div class="project-members">
+                <span class="chip"><i>AV</i>Adithya Varanasi</span>
+                <span class="chip"><i>YD</i>Yogitha Dasari</span>
+                <span class="chip"><i>NS</i>Nagaveni Sagili</span>
+                <span class="chip"><i>SI</i>Sudharani Isnaka</span>
+            </div>
+        </div>
+
+        <div class="project-row axia tilt" data-tilt="1.6">
+            <div class="project-name">Axia <span class="count">1</span></div>
+            <div class="project-members">
+                <span class="chip"><i>HE</i>Hitesh Elugoti</span>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<script>
+    // Mouse-driven 3D tilt: cards lean toward the pointer and settle back on leave.
+    document.querySelectorAll('.tilt').forEach(function (el) {
+        var max = parseFloat(el.dataset.tilt || 6);
+        el.addEventListener('mousemove', function (e) {
+            var r = el.getBoundingClientRect();
+            var x = (e.clientX - r.left) / r.width - 0.5;
+            var y = (e.clientY - r.top) / r.height - 0.5;
+            el.style.transform = 'perspective(1000px) rotateX(' + (-y * max).toFixed(2) + 'deg) rotateY(' + (x * max).toFixed(2) + 'deg)';
+        });
+        el.addEventListener('mouseleave', function () { el.style.transform = ''; });
+    });
+</script>
+
+</body>
+</html>
