@@ -138,6 +138,17 @@
         }
         .project-tag.tbd { color: #64748b; background: #f1f5f9; border: 1px dashed #cbd5e1; box-shadow: none; font-weight: 600; }
 
+        /* Lead badge */
+        .lead-badge {
+            display: inline-block; font-size: 9px; font-weight: 800; letter-spacing: .5px; text-transform: uppercase;
+            color: #fff; padding: 2px 9px; border-radius: 10px;
+            background: linear-gradient(180deg, var(--hi) -60%, var(--c) 50%, var(--lo) 190%);
+            box-shadow: 0 2px 0 var(--lo), inset 0 1px 0 rgba(255, 255, 255, .5);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, .35);
+        }
+        .member-node .lead-badge { margin-bottom: 7px; }
+        .chip .lead-badge { margin-left: 2px; }
+
         /* Projects section */
         .projects { width: 100%; max-width: 1300px; margin-top: 76px; }
         .projects-head { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 14px; margin-bottom: 22px; padding: 0 10px; }
@@ -220,7 +231,7 @@
 
 <div class="header-section">
     <h1 class="page-title">Team Structure &amp; Direct Reporting Lines</h1>
-    <p class="page-subtitle">All 18 resources report directly to Kiran Marri, Project Lead.</p>
+    <p class="page-subtitle">All 20 resources report directly to Kiran Marri, Project Lead.</p>
 </div>
 
 <!-- Project Lead -->
@@ -244,19 +255,21 @@
 
     <div class="branch">
         <div class="stream-card enfin tilt" data-tilt="4">
-            <div class="stream-pill">Enfin Core Stream (11)</div>
+            <div class="stream-pill">Enfin Core Stream (13)</div>
             <div class="members-grid">
-                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Chandra Bussa</span><div class="project-tag">Blue</div></div>
-                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Yaseen Khaderbad</span><div class="project-tag">ACH Auto Pay</div></div>
+                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Chandra Bussa</span><div class="project-tag">Backlog - Ops</div></div>
+                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Yaseen Khaderbad</span><div class="project-tag">Backlog - Sales</div></div>
                 <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Ramya Kolli</span><div class="project-tag">Trinity</div></div>
                 <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Madhava Galinki</span><div class="project-tag">Ledger Report</div></div>
-                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Pratap Thara</span><div class="project-tag">Backlog</div></div>
-                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Nilay Jape</span><div class="project-tag">QSS</div></div>
-                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Pranathi Chodagam</span><div class="project-tag">Blue</div></div>
+                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Pratap Thara</span><div class="project-tag">EverGreen(DCA)</div></div>
+                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Nilay Jape</span><div class="project-tag">EverGreen(DCA)</div></div>
+                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Pranathi Chodagam</span><div class="project-tag">CallPilot</div></div>
                 <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Kanchana Vantakula</span><div class="project-tag">Ledger Report</div></div>
-                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Aparna Banka</span><div class="project-tag">Blue</div></div>
-                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Guljar</span><div class="project-tag tbd">TBD</div></div>
-                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Priya Korada</span><div class="project-tag tbd">TBD</div></div>
+                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Aparna Banka</span><div class="project-tag">Trinity</div></div>
+                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Guljar - From NewHomes</span><div class="project-tag">Backlog - Sales</div></div>
+                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Priya Korada - From NewHomes</span><div class="project-tag">Backlog - Sales</div></div>
+                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Sudharani Isnaka - From NewHomes</span><div class="project-tag">Backlog - Sales</div></div>
+                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">TBD - Anusha Replacement</span><div class="project-tag tbd">TBD</div></div>
             </div>
         </div>
     </div>
@@ -278,7 +291,7 @@
                 <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Adithya Varanasi</span><div class="project-tag">NewHomes</div></div>
                 <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Yogitha Dasari</span><div class="project-tag">NewHomes</div></div>
                 <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Nagaveni Sagili</span><div class="project-tag">NewHomes</div></div>
-                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Sudharani Isnaka</span><div class="project-tag">NewHomes</div></div>
+                <div class="member-node"><div class="avatar"><svg><use href="#user"/></svg></div><span class="member-name">Sridhar Reddy - New Joinee</span><span class="lead-badge">Lead</span><div class="project-tag">NewHomes</div></div>
             </div>
         </div>
     </div>
@@ -299,7 +312,7 @@
     <div class="projects-head">
         <div>
             <h2 class="projects-title">Projects &amp; Resources</h2>
-            <p class="projects-sub">10 projects &middot; 18 resources &middot; colour shows the team each project belongs to</p>
+            <p class="projects-sub">10 projects &middot; 20 resources &middot; colour shows the team each project belongs to</p>
         </div>
         <div class="legend">
             <span class="enfin"><i></i>Enfin Core</span>
@@ -312,25 +325,27 @@
     <div class="project-list">
 
         <div class="project-row enfin tilt" data-tilt="1.6">
-            <div class="project-name">Blue <span class="count">3</span></div>
+            <div class="project-name">Backlog - Ops <span class="count">1</span></div>
             <div class="project-members">
                 <span class="chip"><i>CB</i>Chandra Bussa</span>
-                <span class="chip"><i>PC</i>Pranathi Chodagam</span>
-                <span class="chip"><i>AB</i>Aparna Banka</span>
             </div>
         </div>
 
         <div class="project-row enfin tilt" data-tilt="1.6">
-            <div class="project-name">ACH Auto Pay <span class="count">1</span></div>
+            <div class="project-name">Backlog - Sales <span class="count">4</span></div>
             <div class="project-members">
                 <span class="chip"><i>YK</i>Yaseen Khaderbad</span>
+                <span class="chip"><i>G</i>Guljar - From NewHomes</span>
+                <span class="chip"><i>PK</i>Priya Korada - From NewHomes</span>
+                <span class="chip"><i>SI</i>Sudharani Isnaka - From NewHomes</span>
             </div>
         </div>
 
         <div class="project-row enfin tilt" data-tilt="1.6">
-            <div class="project-name">Trinity <span class="count">1</span></div>
+            <div class="project-name">Trinity <span class="count">2</span></div>
             <div class="project-members">
                 <span class="chip"><i>RK</i>Ramya Kolli</span>
+                <span class="chip"><i>AB</i>Aparna Banka</span>
             </div>
         </div>
 
@@ -343,24 +358,24 @@
         </div>
 
         <div class="project-row enfin tilt" data-tilt="1.6">
-            <div class="project-name">Backlog <span class="count">1</span></div>
+            <div class="project-name">EverGreen(DCA) <span class="count">2</span></div>
             <div class="project-members">
                 <span class="chip"><i>PT</i>Pratap Thara</span>
-            </div>
-        </div>
-
-        <div class="project-row enfin tilt" data-tilt="1.6">
-            <div class="project-name">QSS <span class="count">1</span></div>
-            <div class="project-members">
                 <span class="chip"><i>NJ</i>Nilay Jape</span>
             </div>
         </div>
 
         <div class="project-row enfin tilt" data-tilt="1.6">
-            <div class="project-name">TBD <span class="count">2</span></div>
+            <div class="project-name">CallPilot <span class="count">1</span></div>
             <div class="project-members">
-                <span class="chip"><i>G</i>Guljar</span>
-                <span class="chip"><i>PK</i>Priya Korada</span>
+                <span class="chip"><i>PC</i>Pranathi Chodagam</span>
+            </div>
+        </div>
+
+        <div class="project-row enfin tilt" data-tilt="1.6">
+            <div class="project-name">TBD <span class="count">1</span></div>
+            <div class="project-members">
+                <span class="chip"><i>AR</i>TBD - Anusha Replacement</span>
             </div>
         </div>
 
@@ -378,7 +393,7 @@
                 <span class="chip"><i>AV</i>Adithya Varanasi</span>
                 <span class="chip"><i>YD</i>Yogitha Dasari</span>
                 <span class="chip"><i>NS</i>Nagaveni Sagili</span>
-                <span class="chip"><i>SI</i>Sudharani Isnaka</span>
+                <span class="chip"><i>SR</i>Sridhar Reddy - New Joinee<span class="lead-badge">Lead</span></span>
             </div>
         </div>
 
